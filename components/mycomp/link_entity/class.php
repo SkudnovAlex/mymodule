@@ -6,7 +6,8 @@
  * Time: 15:13
  */
 use Bitrix\Main\Loader;
-use my\module\MyModuleIndexTable;
+use my\module\ResidentsTable;
+use my\module\CityTable;
 use Bitrix\Main\Page\Asset;
 use Bitrix\Main\Data\Cache;
 
@@ -43,30 +44,33 @@ class ModuleClass extends CBitrixComponent {
             }
             elseif ($сache->startDataCache())
             {
-
-                $nav = new \Bitrix\Main\UI\PageNavigation("nav-more-news");
-                $nav->allowAllRecords(true)
-                    ->setPageSize(5)
-                    ->initFromUri();
-
-                $obRes = MyModuleIndexTable::getList([
-                    'select' => ['*'],
-                    'order' => ['ID' => 'DESC'],
-                    "count_total" => true,
-                    "offset" => $nav->getOffset(),
-                    "limit" => $nav->getLimit(),
+                $obRes_1_1 = ResidentsTable::getList([
+                    'select' => [
+                        'ID',
+                        'NAME',
+                        'LAST_NAME',
+                        'NAME_CITY' => 'CITY_NAME.NAME',
+                        'NAME_REGION' => 'REGION.NAME'
+                    ],
+                    'order' => ['ID' => 'ASC'],
                 ]);
 
-                $nav->setRecordCount($obRes->getCount());
+                $obRes_1_N = CityTable::getList([
+                    'select' => [
+                        'NAME',
+                        'NAME_RESIDENTS' => '\my\module\ResidentsTable:CITY_NAME.NAME',
+                        'LAST_NAME_RESIDENTS' => '\my\module\ResidentsTable:CITY_NAME.LAST_NAME',
+                        'ID_CITY' => 'ID',
+                        'ID_CITY_RESIDENTS' => '\my\module\ResidentsTable:CITY_NAME.CITY',
+                    ],
+                    'order' => ['NAME' => 'ASC'],
+                ]);
 
-                while ($res = $obRes->fetch()) {
-                    $this->arResult[] = [
-                        'ID' => $res['ID'],
-                        'TITLE' => $res['TITLE'],
-                        'DATE_CREATE' => $res['DATE_CREATE']->toString(),
-                    ];
-                }
+                //echo "<pre>"; print_r($obRes_1_1->fetchAll()); echo "</pre>";
+                //echo "<pre>"; print_r($obRes_1_N->fetchAll()); echo "</pre>";
 
+                $this->arResult['1_1'] = $obRes_1_1->fetchAll();
+                $this->arResult['1_N'] = $obRes_1_N->fetchAll();
 
                 $сache->endDataCache($this->arResult);
 

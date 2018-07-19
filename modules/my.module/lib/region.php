@@ -10,11 +10,11 @@ namespace my\module;
 
 use Bitrix\Main\Entity;
 
-class MyModuleIndexTable extends Entity\DataManager
+class RegionTable extends Entity\DataManager
 {
     public static function getTableName()
     {
-        return "mymodule_index";
+        return "mymodule_region";
     }
 
     public static function getMap()
@@ -25,12 +25,14 @@ class MyModuleIndexTable extends Entity\DataManager
                 'primary' => true,
                 'autocomplete' => true
             ]),
-            //title
-            new Entity\StringField("TITLE", [
+            //назвени региона
+            new Entity\StringField("NAME", [
                 'required' => true
             ]),
-            //date create
-            new Entity\DateField("DATE_CREATE"),
+            //регион
+            new Entity\IntegerField("CODE_REG", [
+                'required' => true
+            ]),
         );
     }
 

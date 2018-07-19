@@ -36,7 +36,7 @@ class ModuleClass extends CBitrixComponent {
             Asset::getInstance()->addString($this->jsBootstrap);
 
             $сache = Cache::createInstance();
-            if ($сache->initCache($this->cacheTime))
+            if ($сache->initCache($this->cacheTim))
             {
                 $result = $сache->getVars();
                 $this->arResult = $result;

@@ -19,7 +19,7 @@ Class MyModuleAgent
         $date = date('Y-m-d H:i:s');
         $result = MyModuleIndexTable::add([
             'TITLE' => 'Запись добавлена Агентом на Хитах',
-            'DATE_CREATE' => new Type\DateTime($date, 'Y-m-d H:i:s'),
+            'DATE_CREATE' => new Type\Date($date, 'Y-m-d'),
         ]);
         if ($result->isSuccess()){
             $resId = $result->isSuccess();
